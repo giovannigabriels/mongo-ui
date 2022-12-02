@@ -1,3 +1,4 @@
+const { ObjectId } = require("bson");
 const { getDb } = require("../config");
 
 class User {
@@ -22,7 +23,30 @@ class User {
 
       return users;
     } catch (error) {
-      console.log(error);
+      throw error;
+    }
+  }
+
+  static async findOne(id) {
+    try {
+      const collection = this.getCollection();
+      const user = await collection.findOne({ _id: ObjectId(id) });
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async update(payload, id) {
+    try {
+      const collection = this.getCollection();
+      const res = await collection.updateOne(
+        { _id: ObjectId(id) },
+        { $set: payload }
+      );
+      return res;
+    } catch (error) {
+      throw error;
     }
   }
 }
